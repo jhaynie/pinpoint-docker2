@@ -9,7 +9,7 @@ services:
       - "9200:9200"
       - "9300:9300"
       volumes:
-      - ./data/elasticsearch:/usr/share/elasticsearch/data
+      - ${DOCKERHOME}/data/elasticsearch:/usr/share/elasticsearch/data
 
    kibana:
       image: kibana:latest
@@ -35,8 +35,9 @@ services:
       - RABBITMQ_ERLANG_COOKIE=98098208r09wq8r908qw90er8q0w8er09q8wer908qw90er
       - RABBITMQ_DEFAULT_USER=admin
       - RABBITMQ_DEFAULT_PASS=yousuck
+      - RABBITMQ_LOG_LEVELS=trace
       volumes:
-      - ./data/rabbitmq:/var/lib/rabbitmq
+      - ${DOCKERHOME}/data/rabbitmq:/var/lib/rabbitmq
 
    redis:
       image: redis:3-alpine
@@ -44,16 +45,16 @@ services:
       ports:
       - "6379:6379"
       volumes:
-      - ./data/redis:/data
+      - ${DOCKERHOME}/data/redis:/data
       command: ["redis-server", "--appendonly", "yes"]
 
    nginx:
       image: nginx:alpine
       restart: always
       volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./user_passwords.conf:/etc/nginx/user_passwords.conf:ro
-      - ./admin_passwords.conf:/etc/nginx/admin_passwords.conf:ro
+      - ${DOCKERHOME}/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ${DOCKERHOME}/user_passwords.conf:/etc/nginx/user_passwords.conf:ro
+      - ${DOCKERHOME}/admin_passwords.conf:/etc/nginx/admin_passwords.conf:ro
       links:
       - kibana:kibana
       - elasticsearch:elasticsearch

@@ -1,0 +1,38 @@
+version: '2'
+
+services:
+
+   db:
+      image: jhaynie/db
+      environment:
+      - LOG_OUTPUT=simple
+      - CONSUL=
+      links:
+      - elasticsearch:elasticsearch
+
+   fetcher:
+      image: jhaynie/fetcher
+      environment:
+      - LOG_OUTPUT=simple
+      - CONSUL=
+      - ZOOKEEPER=
+      - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+      links:
+      - redis:redis
+      volumes:
+      - /home/ubuntu/certs:/usr/src/app/certs
+
+   mq:
+      image: jhaynie/mq
+      environment:
+      - LOG_OUTPUT=simple
+      - CONSUL=
+      - ZOOKEEPER=
+      - RABBITMQ_URL=amqp://admin:yousuck@rabbitmq
+      volumes:
+      - /home/ubuntu/certs:/usr/src/app/certs
+      links:
+      - fetcher:fetcher
+      - redis:redis
+      - rabbitmq:rabbitmq
