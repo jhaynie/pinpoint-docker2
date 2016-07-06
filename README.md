@@ -20,10 +20,11 @@ curl -sSL https://get.docker.com/ | sudo bash
 Before running compose make sure to create directory and move files:
 
 ```bash
-docker-machine ssh pp2 mkdir data
-docker-machine scp admin_passwords.conf pp2:~/
-docker-machine scp nginx.conf pp2:~/
-docker-machine scp user_passwords.conf pp2:~/
+docker-machine ssh NAMEOFMACHINE mkdir data
+docker-machine scp admin_passwords.conf NAMEOFMACHINE:~/
+docker-machine scp nginx.conf NAMEOFMACHINE:~/
+docker-machine scp user_passwords.conf NAMEOFMACHINE:~/
+docker-machine scp -r certs NAMEOFMACHINE:~/
 ```
 
 Set the environment to contain:
@@ -36,12 +37,6 @@ Build the docker services:
 
 ```bash
 gulp docker:build
-```
-
-Copy certs for each service that needs them:
-
-```bash
-docker-machine scp -r certs NAMEOFMACHINE:~/
 ```
 
 Run compose to create services:

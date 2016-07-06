@@ -4,14 +4,18 @@ services:
 
    db:
       image: jhaynie/db
+      restart: always
       environment:
       - LOG_OUTPUT=simple
       - CONSUL=
       links:
       - elasticsearch:elasticsearch
+      ports:
+      - 9101:9101
 
    fetcher:
       image: jhaynie/fetcher
+      restart: always
       environment:
       - LOG_OUTPUT=simple
       - CONSUL=
@@ -21,17 +25,18 @@ services:
       links:
       - redis:redis
       volumes:
-      - /home/ubuntu/certs:/usr/src/app/certs
+      - ${DOCKERHOME}/certs:/usr/src/app/certs
 
    mq:
       image: jhaynie/mq
+      restart: always
       environment:
       - LOG_OUTPUT=simple
       - CONSUL=
       - ZOOKEEPER=
       - RABBITMQ_URL=amqp://admin:yousuck@rabbitmq
       volumes:
-      - /home/ubuntu/certs:/usr/src/app/certs
+      - ${DOCKERHOME}/certs:/usr/src/app/certs
       links:
       - fetcher:fetcher
       - redis:redis
